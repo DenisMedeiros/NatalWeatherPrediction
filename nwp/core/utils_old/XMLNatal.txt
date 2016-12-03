@@ -1,0 +1,14 @@
+--------------------
+BDMEP - INMET
+--------------------
+Estação           : NATAL - RN (OMM: 82598)
+Latitude  (graus) : -5.91
+Longitude (graus) : -35.2
+Altitude  (metros): 48.60
+Estação Operante
+Inicio de operação: 01/01/1911
+Periodo solicitado dos dados: 01/01/2006 a 01/01/2016
+Os dados listados abaixo são os que encontram-se digitados no BDMEP
+Hora em UTC
+
+http://servicos.cptec.inpe.br/XML/estacao/SBNT/condicoesAtuais.xml
