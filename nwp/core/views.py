@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, csv, datetime
+import os, csv, datetime, random
 from django.shortcuts import render
 from django.views.generic import View
 from .models import Amostra
@@ -14,6 +14,7 @@ class PaginaInicialView(View):
         # Descomente a linha abaixo para preencher o banco de dados.
         #tratar_dados()
         #popular_db()
+        realizar_treinamento()
 
         context = {
             'hoje': datetime.datetime.now(),
@@ -156,3 +157,10 @@ def popular_db():
     except StopIteration:
         print 'Dados inseridos no banco de dados.'
         arquivo_leitura.close()
+
+
+def realizar_treinamento():
+    todas_amostras = Amostra.objects.all()
+    amostras_treinamento = random.sample(todas_amostras, 3000)
+
+    #
