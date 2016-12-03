@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="jumbotron">
+    <h2>Previsão do tempo para hoje ({{ hoje|date:"d/m/Y" }}) </h2>
+    <br />
+    <table class="table table-bordered table-hover table-responsive">
+        <thead>
+            <tr class="info">
+                <th> Parâmetro </th>
+                <th> Previsão </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="success">
+                <td> Chuva </td> <td> 20 mm </td>
+            </tr>
+            <tr class="success">
+                <td> Temperatura </td> <td> 25 °C </td>
+            </tr>
+            <tr class="success">
+                <td> Humidade </td> <td> 55 % </td>
+            </tr>
+            <tr class="success">
+                <td> Vento </td> <td> 20 km/h </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
