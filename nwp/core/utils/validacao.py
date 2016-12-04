@@ -50,41 +50,11 @@ try:
 except StopIteration:
     arquivo_leitura.close()
 
+# Carrega o conhecimento obtido de um treinamento anterior.
+reg = joblib.load(os.path.join(diretorio, 'conhecimento.pkl'))
 
-# Realiza o treitamento.
-
-'''
-Regressor MLP.
-Parâmetros importantes:
-http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html#sklearn.neural_network.MLPRegressor
-'''
-reg = MLPRegressor(
-    solver='lbfgs',
-    activation='tanh',
-    learning_rate='adaptive',
-    max_iter=200,
-    alpha=1e-5,
-    warm_start=False,
-    hidden_layer_sizes=(256,),
-    #random_state = random.randint(0,4294967295),
-    tol=1e-8,
-    verbose=True,
-    learning_rate_init=0.01, # Usado no sgd.
-    shuffle=True, # Usado no sgd ou adam.
-    momentum=0.1, # Usado no sgd.
-    nesterovs_momentum=True, # Usado no sgd.
-    power_t = 0.5, # Usado no sgd.
-    beta_1=0.9, # Usado no adam.
-    beta_2=0.999, # Usado no adam.
-    epsilon=1e-8, # Usado no adam.
-    early_stopping=False, #  Usado no adam ou sgd.
-    validation_fraction=0.1, #  Usado no adam ou sgd.
-    batch_size=200, #  Usado no adam ou sgd.
-)
-
-reg.fit(entradas, saidas)
-
-# Salva em disco o treinamento realizado.
-joblib.dump(reg, os.path.join(diretorio, 'conhecimento.pkl'))
-
-print "Treinamento concluído após %d iterações." %(reg.n_iter_)
+# Faz a validação.
+indices = [10, 100, 1000]
+for i in indices:
+    print 'Original: ', saidas[i]
+    print 'Calculado: ', reg.predict([entradas[i]])
