@@ -2,13 +2,19 @@
 # -*- coding: utf-8 -*-
 
 import csv, os, random, datetime
+from .. import models
 
+def coletas_dict(nome_arquivo):
+    diretorio = os.path.dirname(__file__)
+    arquivo_leitura = open(
+        os.path.join(diretorio, 'dados', nome_arquivo), 'rb')
 
+    reader = csv.reader(arquivo_leitura, delimiter=';')
+    # Ignora a primeira linha
+    reader.next()
 
-
-def csv2dict(arquivo_csv):
     # Lê o arquivo com os dados e armazena os não defeituosos em um dicionário.
-    coletas_corretas = {}
+    coletas = {}
     try:
         while True:
             coleta = reader.next()
@@ -32,7 +38,7 @@ def csv2dict(arquivo_csv):
                 velocidade_vento = float(velocidade_vento)
                 precipitacao = float(precipitacao)
 
-                coletas_corretas[data] = {
+                coletas[data] = {
                     'temperatura_min': temperatura_min,
                     'temperatura_max': temperatura_max,
                     'temperatura_media': temperatura_media,
@@ -46,6 +52,7 @@ def csv2dict(arquivo_csv):
     except StopIteration as e:
         pass
 
+    return coletas
 
 
 '''
@@ -55,9 +62,9 @@ Trata os dados fornecidos pelo INMEP., de modo a unificar as coletas em um
 def tratar_dados():
     diretorio = os.path.dirname(__file__)
     arquivo_leitura = open(
-        os.path.join(diretorio, 'dados_inmet.csv'), 'rb')
+        os.path.join(diretorio, 'dados', 'dados_inmet.csv'), 'rb')
     arquivo_escrita = open(
-        os.path.join(diretorio, 'dados_tratados.csv'), 'wb')
+        os.path.join(diretorio, 'dados', 'dados_tratados.csv'), 'wb')
 
     reader = csv.reader(arquivo_leitura, delimiter=';')
     writer = csv.writer(arquivo_escrita, delimiter=';')
@@ -125,14 +132,8 @@ Corrige os campos em branco dos dados tratados anteriormente.
 '''
 def corrigir_dados_tratados():
     diretorio = os.path.dirname(__file__)
-    arquivo_leitura = open(
-        os.path.join(diretorio, 'dados_tratados.csv'), 'rb')
     arquivo_escrita = open(
-        os.path.join(diretorio, 'dados_tratados_corrigidos.csv'), 'wb')
-
-    reader = csv.reader(arquivo_leitura, delimiter=';')
-    # Ignora a primeira linha
-    reader.next()
+        os.path.join(diretorio, 'dados', 'dados_tratados_corrigidos.csv'), 'wb')
 
     writer = csv.writer(arquivo_escrita, delimiter=';')
     # Escreve os cabeçalhos.
@@ -141,47 +142,10 @@ def corrigir_dados_tratados():
         'velocidade_vento', 'precipitacao'])
 
     # Lê o arquivo com os dados e armazena os não defeituosos em um dicionário.
-    coletas_corretas = {}
-    try:
-        while True:
-            coleta = reader.next()
-            data = coleta[0]
-            temperatura_min = coleta[1]
-            temperatura_max = coleta[2]
-            temperatura_media = coleta[3]
-            humidade_media = coleta[4]
-            insolacao = coleta[5]
-            velocidade_vento = coleta[6]
-            precipitacao = coleta[7]
+    coletas_corretas = coletas_dict('dados_tratados.csv')
 
-            data = datetime.datetime.strptime(data, '%d/%m/%Y')
-
-            try:
-                temperatura_min = float(temperatura_min)
-                temperatura_max = float(temperatura_max)
-                temperatura_media = float(temperatura_media)
-                humidade_media = float(humidade_media)
-                insolacao = float(insolacao)
-                velocidade_vento = float(velocidade_vento)
-                precipitacao = float(precipitacao)
-
-                coletas_corretas[data] = {
-                    'temperatura_min': temperatura_min,
-                    'temperatura_max': temperatura_max,
-                    'temperatura_media': temperatura_media,
-                    'humidade_media': humidade_media,
-                    'insolacao': insolacao,
-                    'velocidade_vento': velocidade_vento,
-                    'precipitacao': precipitacao,
-                }
-            except ValueError as e:
-                pass
-    except StopIteration as e:
-        pass
-
-    arquivo_leitura.close()
     arquivo_leitura = open(
-        os.path.join(diretorio, 'dados_tratados.csv'), 'rb')
+        os.path.join(diretorio, 'dados', 'dados_tratados.csv'), 'rb')
     # Armazena os dados.
     reader = csv.reader(arquivo_leitura, delimiter=';')
     # Ignora a primeira linha
@@ -283,17 +247,10 @@ def corrigir_dados_tratados():
 
 def criar_conjunto_treinamento_validacao():
     diretorio = os.path.dirname(__file__)
-    arquivo_leitura = open(
-        os.path.join(diretorio, 'dados_tratados_corrigidos.csv'), 'rb')
-
     arquivo_ct = open(
-        os.path.join(diretorio, 'conjunto_treinamento.csv'), 'wb')
+        os.path.join(diretorio, 'dados', 'conjunto_treinamento.csv'), 'wb')
     arquivo_cv = open(
-        os.path.join(diretorio, 'conjunto_validacao.csv'), 'wb')
-
-    reader = csv.reader(arquivo_leitura, delimiter=';')
-    # Ignora a primeira linha
-    reader.next()
+        os.path.join(diretorio, 'dados', 'conjunto_validacao.csv'), 'wb')
 
     writer_ct = csv.writer(arquivo_ct, delimiter=';')
     # Escreve os cabeçalhos.
@@ -316,43 +273,7 @@ def criar_conjunto_treinamento_validacao():
     ])
 
     # Lê o arquivo com os dados e armazena os não defeituosos em um dicionário.
-    todas_coletas = {}
-    try:
-        while True:
-            coleta = reader.next()
-            data = coleta[0]
-            temperatura_min = coleta[1]
-            temperatura_max = coleta[2]
-            temperatura_media = coleta[3]
-            humidade_media = coleta[4]
-            insolacao = coleta[5]
-            velocidade_vento = coleta[6]
-            precipitacao = coleta[7]
-
-            data = datetime.datetime.strptime(data, '%d/%m/%Y')
-
-            try:
-                temperatura_min = float(temperatura_min)
-                temperatura_max = float(temperatura_max)
-                temperatura_media = float(temperatura_media)
-                humidade_media = float(humidade_media)
-                insolacao = float(insolacao)
-                velocidade_vento = float(velocidade_vento)
-                precipitacao = float(precipitacao)
-
-                todas_coletas[data] = {
-                    'temperatura_min': temperatura_min,
-                    'temperatura_max': temperatura_max,
-                    'temperatura_media': temperatura_media,
-                    'humidade_media': humidade_media,
-                    'insolacao': insolacao,
-                    'velocidade_vento': velocidade_vento,
-                    'precipitacao': precipitacao,
-                }
-            except ValueError as e:
-                pass
-    except StopIteration as e:
-        pass
+    todas_coletas = coletas_dict('dados_tratados_corrigidos.csv')
 
     quantidade = len(todas_coletas)
 
@@ -425,77 +346,13 @@ def criar_conjunto_treinamento_validacao():
         temperatura_max, humidade_media,
         ])
 
-
-    arquivo_leitura.close()
     arquivo_ct.close()
     arquivo_cv.close()
     print '[3] Criação dos conjuntos de treinamento e validação realizada com sucesso.'
 
 
-'''
-Insere no banco de dados os dados tratados.
-'''
-def popular_db():
-    diretorio = os.path.dirname(__file__)
-    arquivo_leitura = open(
-        os.path.join(diretorio, 'dados_tratados_corrigidos.csv'), 'rb')
-
-    reader = csv.reader(arquivo_leitura, delimiter=';')
-
-    # Remove os cabeçalhos.
-    reader.next()
-    i = 0
-    try:
-        while True:
-
-            coleta = reader.next()
-
-            data = coleta[0]
-            temperatura_min = coleta[1]
-            temperatura_max = coleta[2]
-            temperatura_media = coleta[3]
-            humidade_media = coleta[4]
-            insolacao = coleta[5]
-            velocidade_vento = coleta[6]
-            precipitacao = coleta[7]
-
-            # Prepara os dados para criar o objeto.
-            data = datetime.datetime.strptime(data, '%d/%m/%Y')
-
-            try:
-                temperatura_min = float(temperatura_min)
-                temperatura_max = float(temperatura_max)
-                temperatura_media = float(temperatura_media)
-                humidade_media = float(humidade_media)
-                insolacao = float(insolacao)
-                velocidade_vento = float(velocidade_vento)
-                precipitacao = float(precipitacao)
-
-                if(not coleta.objects.filter(data=data).exists()):
-                    print data
-                    coleta = coleta(
-                        data = data,
-                        temperatura_min = temperatura_min,
-                        temperatura_max = temperatura_max,
-                        temperatura_media = temperatura_media,
-                        humidade_media = humidade_media,
-                        insolacao = insolacao,
-                        velocidade_vento = velocidade_vento,
-                        precipitacao = precipitacao,
-                    )
-
-                    coleta.save()
-
-            except Exception, e:
-                print data
-                pass
-
-    except StopIteration:
-        print 'Dados inseridos no banco de dados.'
-        arquivo_leitura.close()
 
 
-
-tratar_dados()
-corrigir_dados_tratados()
-criar_conjunto_treinamento_validacao()
+#tratar_dados()
+#corrigir_dados_tratados()
+#criar_conjunto_treinamento_validacao()

@@ -7,13 +7,12 @@ from sklearn.externals import joblib
 
 diretorio = os.path.dirname(__file__)
 arquivo_leitura = open(
-os.path.join(diretorio, 'conjunto_treinamento.csv'), 'rb')
+os.path.join(diretorio, 'dados', 'conjunto_treinamento.csv'), 'rb')
 
 reader = csv.reader(arquivo_leitura, delimiter=';')
 
 entradas = []
 saidas = []
-
 
 # Prepara as entradas e saídas.
 try:

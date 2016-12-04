@@ -7,13 +7,13 @@ from sklearn.externals import joblib
 
 diretorio = os.path.dirname(__file__)
 arquivo_leitura = open(
-os.path.join(diretorio, 'conjunto_treinamento.csv'), 'rb')
+os.path.join(diretorio, 'dados', 'conjunto_validacao.csv'), 'rb')
 
 reader = csv.reader(arquivo_leitura, delimiter=';')
+reader.next()
 
 entradas = []
 saidas = []
-
 
 # Prepara as entradas e saídas.
 try:
@@ -53,8 +53,10 @@ except StopIteration:
 # Carrega o conhecimento obtido de um treinamento anterior.
 reg = joblib.load(os.path.join(diretorio, 'conhecimento.pkl'))
 
-# Faz a validação.
-indices = [10, 100, 1000]
-for i in indices:
-    print 'Original: ', saidas[i]
-    print 'Calculado: ', reg.predict([entradas[i]])
+for i in range(len(entradas)):
+    saida_rna = reg.predict([entradas[i]])
+    saida_esperada = saidas[i]
+
+    print 'Saída esperada: ', [saida_esperada]
+    print 'Saída da RNA: ', saida_rna
+    print '-----'
