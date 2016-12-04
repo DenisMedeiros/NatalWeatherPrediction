@@ -21,11 +21,6 @@ A entrada da RNA será no formato a seguir:
     insolacao_2,
     velocidade_vento_2,
 
-    temp_min_3,
-    temp_max_3,
-    humidade_media_3,
-    insolacao_3,
-    velocidade_vento_3,
 ]
 '''
 input_data = numpy.array([
