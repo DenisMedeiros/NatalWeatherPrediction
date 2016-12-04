@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import os, csv, datetime, random
+import os, csv, datetime, random, numpy
 from django.shortcuts import render
 from django.views.generic import View
 from .models import Amostra
+from .utils import mlpy
 
 # Create your views here.
 
@@ -15,7 +16,8 @@ class PaginaInicialView(View):
         #tratar_dados()
         #corrigir_dados_tratados()
         #popular_db()
-        criar_conjunto_treinamento()
+        #criar_conjunto_treinamento()
+        treinar_rna()
 
         context = {
             'hoje': datetime.datetime.now(),
@@ -341,3 +343,70 @@ def criar_conjunto_treinamento():
     arquivo_escrita.close()
     print "Conjunto treinamento criado com sucesso!"
     
+def treinar_rna():
+    diretorio = os.path.dirname(__file__)
+    arquivo_leitura = open(
+        os.path.join(diretorio, 'resource', 'conjunto_treinamento.csv'), 'rb')
+
+    reader = csv.reader(arquivo_leitura, delimiter=';')
+
+    # Remove os cabeçalhos.
+    reader.next()
+
+    entradas = []
+    saidas = []
+
+    # Prepara as entradas e saídas.
+    try:
+        while True:
+            linha = reader.next()
+
+            # Dados da entrada.
+            mes = int(linha[0])
+            temperatura_min1 = float(linha[1])
+            temperatura_min2 = float(linha[2])
+            temperatura_max1 = float(linha[3])
+            temperatura_max2 = float(linha[4])
+            humidade_media1 = float(linha[5])
+            humidade_media2 = float(linha[6])
+            insolacao1 = float(linha[7])
+            insolacao2 = float(linha[8])
+            velocidade_vento1 = float(linha[9])
+            velocidade_vento2 = float(linha[10])
+
+            # Dados da saída.
+            precipitacao = float(linha[11])
+            temperatura_min = float(linha[12])
+            temperatura_max = float(linha[13])
+            humidade_media = float(linha[14])
+
+            entradas.append([mes, temperatura_min1, temperatura_min2,
+                temperatura_max1, temperatura_max2, humidade_media1,
+                humidade_media2, insolacao1, insolacao2, velocidade_vento1,
+                velocidade_vento2,])
+
+            saidas.append([precipitacao, temperatura_min, 
+                temperatura_max, humidade_media])
+
+    except StopIteration:
+        arquivo_leitura.close()
+
+
+    entradas = numpy.array(entradas)
+    saidas = numpy.array(saidas)
+
+    saidas_max = numpy.amax(saidas)
+    saidas_min = numpy.amin(saidas)
+    delta = float(saidas_max-saidas_min) 
+    saidas_norm = ((saidas - saidas_min)/delta - 0.5 ) * 2.0;
+
+    (hidden_weights, output_weights) = mlpy.trainning_algorithm(
+        neurons_hidden_layer = 64,
+        break_error = 1e-3,
+        break_iterations = 10000,
+        eta = 0.1,
+        alpha = 0.7,
+        input_data = entradas,
+        desired_output = saidas_norm,
+    )
+

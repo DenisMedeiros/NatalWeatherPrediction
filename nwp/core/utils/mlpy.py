@@ -4,7 +4,6 @@
 # Date: 30/Aug/2016
 
 import numpy
-from multiprocessing import Pool, TimeoutError
 
 '''
 This is the Artificial Neural Network - Multi-layer perceptron training
@@ -32,13 +31,12 @@ def trainning_algorithm(
         desired_output,
 ):
 
-    pool = Pool(processes = 8)
-
     # Reorganize the input and output data.to their transposed form.
     input_data = input_data.T
     desired_output = desired_output.T
 
     # Get details about the input and output.
+
     input_size, number_entries =  input_data.shape
     output_size, _ = desired_output.shape
 
@@ -65,6 +63,7 @@ def trainning_algorithm(
 
     iterations = 0
     while True:
+
         # Shuffle the input order to improve the learning.
         new_order = numpy.random.permutation(number_entries)
         input_data_bias = input_data_bias[:, new_order]
@@ -90,7 +89,7 @@ def trainning_algorithm(
 
         # Execute the back propagation algorithm.
         delta_output_layer_temp = numpy.multiply(
-                    1 - numpy.square(numpy.tanh(final_output)), static_error
+                    1.0 - numpy.square(numpy.tanh(final_output)), static_error
         )
 
         delta_output_layer = (
@@ -105,7 +104,7 @@ def trainning_algorithm(
 
         delta_hidden_layer_temp = numpy.multiply(
             1 - numpy.square(numpy.tanh(hidden_layer_output_bias)),
-            (numpy.transpose(output_layer_weights) * delta_output_layer_temp)
+            numpy.dot(output_layer_weights.T, delta_output_layer_temp)
         )
 
         delta_hidden_layer_temp_2 = delta_hidden_layer_temp[1:neurons_hidden_layer+1, :]
@@ -120,13 +119,15 @@ def trainning_algorithm(
 
         # Calculate the total error.
         total_error = (
-                (1.0/(2 * number_entries)) *
+                (1.0/(2.0 * number_entries)) *
                 numpy.trace(static_error.T.dot(static_error))
         )
 
         if total_error < break_error or iterations >= break_iterations:
             break
 
+
+        print 'Iteracao %d, Erro %.20f' %(iterations, total_error)
         iterations += 1
 
     # Return the weights.
@@ -153,7 +154,7 @@ def validating_algorithm(
     input_data, # Input data (table format).
 ):
     # Reorganize the input data.
-    input_data = numpy.transpose(input_data)
+    input_data = input_data.T
     input_size, number_entries =  input_data.shape
 
     # Add the bias to the input matrix.
