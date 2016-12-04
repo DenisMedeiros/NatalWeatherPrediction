@@ -3,7 +3,7 @@
 
 import csv, os, random, datetime
 
-tamanho_treinamento = 2000
+tamanho_treinamento = 5000
 tamanho_validacao = 1000
 
 def coletas_dict(nome_arquivo):
@@ -280,9 +280,8 @@ def criar_conjunto_treinamento_validacao():
     quantidade = len(todas_coletas)
 
     # Serão 2000 elementos para treinamento e 2000 para validação.
-    indices_coletas = random.sample(xrange(2, quantidade, 1), tamanho_treinamento + tamanho_validacao)
-    indices_treinamento = indices_coletas[0:tamanho_treinamento-1]
-    indices_validacao = indices_coletas[tamanho_treinamento:(tamanho_treinamento + tamanho_validacao-1)]
+    indices_treinamento = random.sample(xrange(2, quantidade, 1), tamanho_treinamento)
+    indices_validacao = random.sample(xrange(2, quantidade, 1), tamanho_validacao)
 
     for i in indices_treinamento:
 

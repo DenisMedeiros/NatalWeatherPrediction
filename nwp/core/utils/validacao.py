@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import csv, os, random
+import csv, os, random, numpy
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.externals import joblib
 
@@ -58,5 +58,5 @@ for i in range(len(entradas)):
     saida_esperada = saidas[i]
 
     print 'Saída esperada: ', [saida_esperada]
-    print 'Saída da RNA: ', saida_rna
+    print 'Saída da RNA: ', numpy.round(saida_rna, decimals=1)
     print '-----'
