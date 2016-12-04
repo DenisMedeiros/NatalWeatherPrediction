@@ -6,7 +6,7 @@ from django.db import models
 
 # Create your models here.
 
-class Amostra(models.Model):
+class Coleta(models.Model):
     data = models.DateField(unique=True,
         verbose_name='Data da Coleta')
     temperatura_max = models.FloatField(blank=False, null=False,
@@ -25,8 +25,8 @@ class Amostra(models.Model):
         verbose_name='Precipitação')
 
     def __unicode__(self):
-        return 'Amostra #%d' %self.id
+        return 'Coleta #%d' %self.id
 
     class Meta:
-        verbose_name = u'Amostra'
-        verbose_name_plural = u'Amostras'
+        verbose_name = u'Coleta'
+        verbose_name_plural = u'Coletas'
