@@ -339,7 +339,6 @@ def criar_conjunto_treinamento():
         temperatura_max, humidade_media,
         ])
 
-
     arquivo_escrita.close()
     print "Conjunto treinamento criado com sucesso!"
     
