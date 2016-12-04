@@ -10,6 +10,7 @@ arquivo_leitura = open(
 os.path.join(diretorio, 'dados', 'conjunto_treinamento.csv'), 'rb')
 
 reader = csv.reader(arquivo_leitura, delimiter=';')
+reader.next()
 
 entradas = []
 saidas = []
@@ -61,7 +62,7 @@ reg = MLPRegressor(
     solver='lbfgs',
     activation='tanh',
     learning_rate='adaptive',
-    max_iter=200,
+    max_iter=2000,
     alpha=1e-5,
     warm_start=False,
     hidden_layer_sizes=(256,),

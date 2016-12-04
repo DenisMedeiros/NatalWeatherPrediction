@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import csv, os, random, datetime
-from .. import models
+
+tamanho_treinamento = 2000
+tamanho_validacao = 1000
 
 def coletas_dict(nome_arquivo):
     diretorio = os.path.dirname(__file__)
@@ -278,9 +280,9 @@ def criar_conjunto_treinamento_validacao():
     quantidade = len(todas_coletas)
 
     # Serão 2000 elementos para treinamento e 2000 para validação.
-    indices_coletas = random.sample(xrange(2, quantidade, 1), 4000)
-    indices_treinamento = random.sample(indices_coletas, 2000)
-    indices_validacao = random.sample(indices_coletas, 2000)
+    indices_coletas = random.sample(xrange(2, quantidade, 1), tamanho_treinamento + tamanho_validacao)
+    indices_treinamento = indices_coletas[0:tamanho_treinamento-1]
+    indices_validacao = indices_coletas[tamanho_treinamento:(tamanho_treinamento + tamanho_validacao-1)]
 
     for i in indices_treinamento:
 
@@ -351,8 +353,6 @@ def criar_conjunto_treinamento_validacao():
     print '[3] Criação dos conjuntos de treinamento e validação realizada com sucesso.'
 
 
-
-
-#tratar_dados()
-#corrigir_dados_tratados()
-#criar_conjunto_treinamento_validacao()
+tratar_dados()
+corrigir_dados_tratados()
+criar_conjunto_treinamento_validacao()
