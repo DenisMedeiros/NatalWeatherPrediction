@@ -20,4 +20,5 @@ from core import views
 urlpatterns = [
     url(r'^$', views.PaginaInicialView.as_view(), name='pagina_inicial'),
     url(r'^sobre/$', views.SobreView.as_view(), name='sobre'),
+    url(r'^atualizar_db/$', views.AtualizarDBView.as_view(), name='atualizar_db'),
 ]
