@@ -352,6 +352,6 @@ def criar_conjunto_treinamento_validacao():
     print '[3] Criação dos conjuntos de treinamento e validação realizada com sucesso.'
 
 
-tratar_dados()
-corrigir_dados_tratados()
-criar_conjunto_treinamento_validacao()
+#tratar_dados()
+#corrigir_dados_tratados()
+#criar_conjunto_treinamento_validacao()
