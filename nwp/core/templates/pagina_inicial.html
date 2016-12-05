@@ -14,19 +14,18 @@
         </thead>
         <tbody>
             <tr class="success">
-                <td> Chuva </td> <td> 20 mm </td>
+                <td> Chuva </td> <td> {{ precipitacao }} mm </td>
             </tr>
             <tr class="success">
-                <td> Temperatura </td> <td> 25 °C </td>
+                <td> Temperatura Mínima </td> <td> {{ temperatura_min }} °C </td>
             </tr>
             <tr class="success">
-                <td> Humidade </td> <td> 55 % </td>
+                <td> Temperatura Máxima </td> <td> {{ temperatura_max }} °C </td>
             </tr>
             <tr class="success">
-                <td> Vento </td> <td> 20 km/h </td>
+                <td> Humidade </td> <td> {{ humidade_media }} % </td>
             </tr>
         </tbody>
     </table>
-
 </div>
 {% endblock %}

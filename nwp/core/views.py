@@ -4,7 +4,7 @@ import os, csv, datetime, random, numpy
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
-from .utils import tratamento_dados, dados_atuais
+from .utils import tratamento_dados, dados_atuais, validacao
 from .models import Coleta
 import datetime
 
@@ -13,9 +13,41 @@ import datetime
 class PaginaInicialView(View):
 
     def get(self, request):
+
+        # Passa os dados para a RNA.
+        hoje = datetime.datetime.now()
+        ontem = hoje - datetime.timedelta(days=1)
+        anteontem = hoje - datetime.timedelta(days=2)
+
+        coleta_ontem = Coleta.objects.get(data=ontem)
+        coleta_anteontem = Coleta.objects.get(data=anteontem)
+
+        previsao_hoje = validacao.executar(
+            hoje.month,
+            coleta_ontem.temperatura_min,
+            coleta_anteontem.temperatura_min,
+            coleta_ontem.temperatura_max,
+            coleta_anteontem.temperatura_max,
+            coleta_ontem.humidade_media,
+            coleta_anteontem.humidade_media,
+            coleta_ontem.insolacao,
+            coleta_anteontem.insolacao,
+            coleta_ontem.velocidade_vento,
+            coleta_anteontem.velocidade_vento,
+        )
+
+        previsao_hoje['temperatura_min'] = round(previsao_hoje['temperatura_min'], 1)
+        previsao_hoje['temperatura_max'] = round(previsao_hoje['temperatura_max'], 1)
+        previsao_hoje['humidade_media'] = round(previsao_hoje['humidade_media'], 1)
+        if previsao_hoje['precipitacao'] < 0:
+            previsao_hoje['precipitacao'] = 0
+        previsao_hoje['precipitacao'] = round(previsao_hoje['precipitacao'], 1)
+
         context = {
-            'hoje': datetime.datetime.now(),
+            'hoje': hoje,
         }
+
+        context.update(previsao_hoje)
         return render(request, 'pagina_inicial.html', context)
 
 class SobreView(View):
