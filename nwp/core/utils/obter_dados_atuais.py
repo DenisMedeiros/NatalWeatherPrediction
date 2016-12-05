@@ -82,21 +82,38 @@ while 1:
 print "[6] Processando tabela com dados."
 linhas = arvore_dados.xpath("//table[@border='1']/tbody")[0]
 
-anteontem1 = linhas[0].xpath('./td/span/text()')
-anteontem2 = linhas[1].xpath('./td/span/text()')
-anteontem3 = linhas[2].xpath('./td/span/text()')
-
-anteontem_data = datetime.datetime.strptime(anteontem1[0], '%d/%m/%Y')
-anteontem_humidade_media = float(anteontem1[2])
-anteontem_velocidade_vento = float(anteontem1[5])
-anteontem_insolacao = float(anteontem1[8])
-anteontem_temperatura_max = float(anteontem1[9])
+anteontem1 = linhas[0].xpath('./td/span')
+anteontem2 = linhas[1].xpath('./td/span')
+anteontem3 = linhas[2].xpath('./td/span')
+anteontem_data = datetime.datetime.strptime(anteontem1[0].xpath('./text()')[0], '%d/%m/%Y')
 try:
-    anteontem_temperatura_min = float(anteontem1[10])
+    anteontem_humidade_media = float(anteontem1[3].xpath('./text()')[0])
 except:
-    anteontem_temperatura_min = anteontem_temperatura_max - 3
-anteontem_temperatura_media = (anteontem_temperatura_max + anteontem_temperatura_min)/2.0
-anteontem_precipitacao = float(anteontem2[10])
+    anteontem_humidade_media = 'erro'
+try:
+    anteontem_velocidade_vento = float(anteontem1[5].xpath('./text()')[0])
+except:
+    anteontem_velocidade_vento = 'erro'
+try:
+    anteontem_insolacao = float(anteontem1[8].xpath('./text()')[0])
+except:
+    anteontem_insolacao = 'erro'
+try:
+    anteontem_temperatura_max = float(anteontem1[9].xpath('./text()')[0])
+except:
+    anteontem_temperatura_max = 'erro'
+try:
+    anteontem_temperatura_min = float(anteontem2[10].xpath('./text()')[0])
+except:
+    anteontem_temperatura_min = 'erro'
+try:
+    anteontem_temperatura_media = (anteontem_temperatura_max + anteontem_temperatura_min)/2.0
+except:
+    anteontem_temperatura_media = 'erro'
+try:
+    anteontem_precipitacao = float(anteontem2[11].xpath('./text()')[0])
+except:
+    anteontem_precipitacao = 'erro'
 
 coletas[anteontem_data] = {
     'temperatura_min': anteontem_temperatura_min,
@@ -108,23 +125,41 @@ coletas[anteontem_data] = {
     'precipitacao': anteontem_precipitacao,
 }
 
-ontem1 = linhas[3].xpath('./td/span/text()')
-ontem2 = linhas[4].xpath('./td/span/text()')
-ontem3 = linhas[5].xpath('./td/span/text()')
 
-ontem_data = datetime.datetime.strptime(ontem1[0], '%d/%m/%Y')
-ontem_humidade_media = float(ontem1[2])
-ontem_velocidade_vento = float(ontem1[5])
-ontem_insolacao = float(ontem1[8])
-ontem_temperatura_max = float(ontem1[9])
+ontem1 = linhas[3].xpath('./td/span')
+ontem2 = linhas[4].xpath('./td/span')
+ontem3 = linhas[5].xpath('./td/span')
+ontem_data = datetime.datetime.strptime(ontem1[0].xpath('./text()')[0], '%d/%m/%Y')
 try:
-    ontem_temperatura_min = float(ontem1[10])
+    ontem_humidade_media = float(ontem1[3].xpath('./text()')[0])
 except:
-    ontem_temperatura_min = ontem_temperatura_max - 3
-ontem_temperatura_media = (ontem_temperatura_max + ontem_temperatura_min)/2.0
-ontem_precipitacao = float(ontem2[8])
+    ontem_humidade_media = 'erro'
+try:
+    ontem_velocidade_vento = float(ontem1[5].xpath('./text()')[0])
+except:
+    ontem_velocidade_vento = 'erro'
+try:
+    ontem_insolacao = float(ontem1[8].xpath('./text()')[0])
+except:
+    ontem_insolacao = 'erro'
+try:
+    ontem_temperatura_max = float(ontem1[9].xpath('./text()')[0])
+except:
+    ontem_temperatura_max = 'erro'
+try:
+    ontem_temperatura_min = float(ontem2[10].xpath('./text()')[0])
+except:
+    ontem_temperatura_min = 'erro'
+try:
+    ontem_temperatura_media = (ontem_temperatura_max + ontem_temperatura_min)/2.0
+except:
+    ontem_temperatura_media = 'erro'
+try:
+    ontem_precipitacao = float(ontem2[11].xpath('./text()')[0])
+except:
+    ontem_precipitacao = 'erro'
 
-coletas[anteontem_data] = {
+coletas[ontem_data] = {
     'temperatura_min': ontem_temperatura_min,
     'temperatura_max': ontem_temperatura_max,
     'temperatura_media': ontem_temperatura_media,
@@ -133,6 +168,8 @@ coletas[anteontem_data] = {
     'velocidade_vento': ontem_velocidade_vento,
     'precipitacao': ontem_precipitacao,
 }
+
+
 
 
 print coletas
