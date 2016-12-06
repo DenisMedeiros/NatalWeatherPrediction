@@ -60,10 +60,15 @@ class SobreView(View):
 class AtualizarDBView(View):
     
     def get(self, request):
-        atualizar_db()
-        context = {
-        }
-        return HttpResponse("BD atualizado.")
+
+        hoje = datetime.datetime.now()
+        ontem = hoje - datetime.timedelta(days=1)
+
+        if not Coleta.objects.filter(data=ontem).exists():
+            atualizar_db()
+            return HttpResponse("Banco de dados foi atualizado.")
+
+        return HttpResponse("Banco de dados já está atualizado.")
 
 
 # Função auxiliar.
@@ -90,9 +95,8 @@ def popular_db():
 
 def atualizar_db():
 
-    #ultimas_coletas = dados_atuais.get()
-    ultimas_coletas = {datetime.datetime(2016, 12, 3, 0, 0): {'velocidade_vento': 3.1, 'temperatura_media': 'erro', 'temperatura_min': 'erro', 'insolacao': 11.0, 'temperatura_max': 30.0, 'humidade_media': 71.0, 'precipitacao': 0.0}, datetime.datetime(2016, 12, 4, 0, 0): {'velocidade_vento': 2.6, 'temperatura_media': 'erro', 'temperatura_min': 'erro', 'insolacao': 10.1, 'temperatura_max': 30.0, 'humidade_media': 71.0, 'precipitacao': 0.0}}
-    
+    ultimas_coletas = dados_atuais.get()
+   
     # Substitui todos os campos com erro com os da última data válida.
     for key, value in ultimas_coletas.iteritems():
         for key2, value2 in value.iteritems():
