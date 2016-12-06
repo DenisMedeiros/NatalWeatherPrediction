@@ -27,8 +27,8 @@ def testar_conjunto_validacao():
             temperatura_min2 = float(linha[2])
             temperatura_max1 = float(linha[3])
             temperatura_max2 = float(linha[4])
-            humidade_media1 = float(linha[5])
-            humidade_media2 = float(linha[6])
+            umidade_media1 = float(linha[5])
+            umidade_media2 = float(linha[6])
             insolacao1 = float(linha[7])
             insolacao2 = float(linha[8])
             velocidade_vento1 = float(linha[9])
@@ -38,15 +38,15 @@ def testar_conjunto_validacao():
             precipitacao = float(linha[11])
             temperatura_min = float(linha[12])
             temperatura_max = float(linha[13])
-            humidade_media = float(linha[14])
+            umidade_media = float(linha[14])
 
             entradas.append([mes, temperatura_min1, temperatura_min2,
-                temperatura_max1, temperatura_max2, humidade_media1,
-                humidade_media2, insolacao1, insolacao2, velocidade_vento1,
+                temperatura_max1, temperatura_max2, umidade_media1,
+                umidade_media2, insolacao1, insolacao2, velocidade_vento1,
                 velocidade_vento2,])
 
             saidas.append([precipitacao, temperatura_min,
-                temperatura_max, humidade_media,])
+                temperatura_max, umidade_media,])
 
     except StopIteration:
         arquivo_leitura.close()
@@ -68,8 +68,8 @@ def executar(
             temperatura_min2,
             temperatura_max1,
             temperatura_max2,
-            humidade_media1,
-            humidade_media2 ,
+            umidade_media1,
+            umidade_media2 ,
             insolacao1,
             insolacao2,
             velocidade_vento1,
@@ -79,14 +79,14 @@ def executar(
     # Carrega o conhecimento obtido de um treinamento anterior.
     reg = joblib.load(os.path.join(diretorio, 'conhecimento.pkl'))
     saida_rna = reg.predict([[mes, temperatura_min1, temperatura_min2,
-                temperatura_max1, temperatura_max2, humidade_media1,
-                humidade_media2, insolacao1, insolacao2, velocidade_vento1,
+                temperatura_max1, temperatura_max2, umidade_media1,
+                umidade_media2, insolacao1, insolacao2, velocidade_vento1,
                 velocidade_vento2,]])
 
     return {
             'precipitacao': saida_rna[0][0],
             'temperatura_min': saida_rna[0][1],
             'temperatura_max': saida_rna[0][2],
-            'humidade_media': saida_rna[0][3],
+            'umidade_media': saida_rna[0][3],
             }
 

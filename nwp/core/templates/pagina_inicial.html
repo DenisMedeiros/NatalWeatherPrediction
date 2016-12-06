@@ -7,32 +7,32 @@
     <br />
     <table class="table table-bordered table-hover table-responsive" > 
         <thead>
-            <tr class="info">
-                <th> Parâmetro </th>
-                <th> Previsão </th>
-                <th> Confiabilidade </th>
+            <tr class="info text-center">
+                <th style="text-align:center"> Parâmetro </th>
+                <th style="text-align:center"> Previsão </th>
+                <th style="text-align:center"> Confiabilidade </th>
             </tr>
         </thead>
         <tbody>
             <tr class="success">
-                <td> Precipitação </td> 
-                <td> {{ precipitacao }} mm </td> 
-                <td> 70% </td>
+                <td align="center"> Precipitação </td> 
+                <td align="center"> {{ precipitacao }} mm </td> 
+                <td align="center"> {{ conf_precipitacao }} % </td>
             </tr>
             <tr class="success">
-                <td> Temperatura Mínima </td> 
-                <td> {{ temperatura_min }} °C </td> 
-                <td> 70% </td>
+                <td align="center"> Temperatura Mínima </td> 
+                <td align="center"> {{ temperatura_min }} °C </td> 
+                <td align="center"> {{ conf_temp_min }} % </td>
             </tr>
             <tr class="success">
-                <td> Temperatura Máxima </td> 
-                <td> {{ temperatura_max }} °C </td>
-                <td> 70% </td>
+                <td align="center"> Temperatura Máxima </td> 
+                <td align="center"> {{ temperatura_max }} °C </td>
+                <td align="center"> {{ conf_temp_max }} % </td>
             </tr>
             <tr class="success">
-                <td> Humidade </td> 
-                <td> {{ humidade_media }} % </td>
-                <td> 70% </td>
+                <td align="center"> Umidade </td> 
+                <td align="center"> {{ umidade_media }} % </td>
+                <td align="center"> {{ conf_umidade_media }} % </td>
             </tr>
         </tbody>
     </table>

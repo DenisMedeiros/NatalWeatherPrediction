@@ -1,4 +1,4 @@
-data;temperatura_min;temperatura_max;temperatura_media;humidade_media;insolacao;velocidade_vento;precipitacao
+data;temperatura_min;temperatura_max;temperatura_media;umidade_media;insolacao;velocidade_vento;precipitacao
 01/01/1986;22.8;29.4;26.76;76.5;10.5;5.633333;15.3
 02/01/1986;24.2;29.7;27.22;74.25;10.5;2.066667;0.0
 03/01/1986;24.8;30.0;27.44;78.0;10.0;4.966667;0.0

@@ -15,8 +15,8 @@ class Coleta(models.Model):
         verbose_name='Temperatura Mínima')
     temperatura_media = models.FloatField(blank=False, null=False,
         verbose_name='Temperatura Média')
-    humidade_media = models.FloatField(blank=False, null=False,
-        verbose_name='Humidade Média')
+    umidade_media = models.FloatField(blank=False, null=False,
+        verbose_name='umidade Média')
     velocidade_vento = models.FloatField(blank=False, null=False,
         verbose_name='Velocidade do Vento')
     insolacao = models.FloatField(blank=False, null=False,

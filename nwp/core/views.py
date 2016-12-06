@@ -19,6 +19,10 @@ class PaginaInicialView(View):
         ontem = hoje - datetime.timedelta(days=1)
         anteontem = hoje - datetime.timedelta(days=2)
 
+        context = {
+            'hoje': hoje,
+        }
+
         coleta_ontem = Coleta.objects.get(data=ontem)
         coleta_anteontem = Coleta.objects.get(data=anteontem)
 
@@ -28,8 +32,8 @@ class PaginaInicialView(View):
             coleta_anteontem.temperatura_min,
             coleta_ontem.temperatura_max,
             coleta_anteontem.temperatura_max,
-            coleta_ontem.humidade_media,
-            coleta_anteontem.humidade_media,
+            coleta_ontem.umidade_media,
+            coleta_anteontem.umidade_media,
             coleta_ontem.insolacao,
             coleta_anteontem.insolacao,
             coleta_ontem.velocidade_vento,
@@ -38,25 +42,29 @@ class PaginaInicialView(View):
 
         previsao_hoje['temperatura_min'] = round(previsao_hoje['temperatura_min'], 1)
         previsao_hoje['temperatura_max'] = round(previsao_hoje['temperatura_max'], 1)
-        previsao_hoje['humidade_media'] = round(previsao_hoje['humidade_media'], 1)
+        previsao_hoje['umidade_media'] = round(previsao_hoje['umidade_media'], 1)
         if previsao_hoje['precipitacao'] < 0:
             previsao_hoje['precipitacao'] = 0
         previsao_hoje['precipitacao'] = round(previsao_hoje['precipitacao'], 1)
 
-        context = {
-            'hoje': hoje,
-        }
 
         tempo_hoje = clima.get_tempo_hoje()
 
         confiabilidades = fuzzy.calcular_confiabilidade(
             previsao_hoje['precipitacao'], tempo_hoje['precipitacao'],
-            temp_min_rna, temp_min_real,
-            temp_max_rna, temp_max_real,
-            um_media_rna, um_media_real,
+            previsao_hoje['temperatura_min'], tempo_hoje['temperatura_min'],
+            previsao_hoje['temperatura_max'], tempo_hoje['temperatura_max'],
+            previsao_hoje['umidade_media'], tempo_hoje['umidade_media'],
         )
 
+        confiabilidades['conf_precipitacao'] = round(confiabilidades['conf_precipitacao'], 1)
+        confiabilidades['conf_temp_min'] = round(confiabilidades['conf_temp_min'], 1)
+        confiabilidades['conf_temp_max'] = round(confiabilidades['conf_temp_max'], 1)
+        confiabilidades['conf_umidade_media'] = round(confiabilidades['conf_umidade_media'], 1)
+       
         context.update(previsao_hoje)
+        context.update(confiabilidades)
+        
         return render(request, 'pagina_inicial.html', context)
 
 class SobreView(View):
@@ -96,7 +104,7 @@ def popular_db():
             temperatura_min = value['temperatura_min'],
             temperatura_max = value['temperatura_max'],
             temperatura_media = value['temperatura_media'],
-            humidade_media = value['humidade_media'],
+            umidade_media = value['umidade_media'],
             insolacao = value['insolacao'],
             velocidade_vento = value['velocidade_vento'],
             precipitacao = value['precipitacao'],
@@ -120,7 +128,7 @@ def atualizar_db():
             temperatura_min = value['temperatura_min'],
             temperatura_max = value['temperatura_max'],
             temperatura_media = value['temperatura_media'],
-            humidade_media = value['humidade_media'],
+            umidade_media = value['umidade_media'],
             insolacao = value['insolacao'],
             velocidade_vento = value['velocidade_vento'],
             precipitacao = value['precipitacao'],

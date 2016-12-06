@@ -6,11 +6,18 @@
         <h2>Sobre este projeto</h2>
         <p class="lead">
             Este projeto foi desenvolvido como proposta de projeto final do curso DCA0121 - Inteligência Artifical Aplicada,
-            do curso de Engenharia de Computação da Universidade Federal do Rio Grande do Norte.
+            do curso de Engenharia de Computação da Universidade Federal do Rio Grande do Norte, semestre 2016.2.
         </p>
         <p class="lead">
-            O objetivo dele é tentar prever o clima de uma cidade baseado em seu histórico passado, combinando
-            Redes Neurais Artificais com Lógica Fuzzy.
+            O objetivo dele é tentar prever o clima de uma cidade baseado em seu histórico passado através do uso de
+            Redes Neurais Artificais. A RNA foi treinada para aprender o comportamento do clima de Natal/RN
+            com base nos registros climáticos os últimos 30 anos, de modo a fazer a previsão do tempo com base em parâmetros dos
+            dois dias anteriores. Tais parâmetros são os seguintes: as temperaturas mínima e máxima; a humidade média; 
+            a precipitacao, caso tenha ocorrido; o nível de insolação; e a velocidade média do vento.
+        </p>
+        <p class="lead">
+            Além da rede neural, foi utilizada também uma máquina de inferência fuzzy, que recebia como entrada os dados da previsão realizada pela RNA e dados da situação do tempo climático atualizada, e que tinha como objetivo mensurar
+            a confiabilidade dos dados produzidos.
         </p>
         <p>
             Todos os dados utilizados no treinamento da RNA deste trabalho foram obtidos do <a href="http://www.inmet.gov.br/portal/index.php?r=bdmep/bdmep">Instituto Nacional de Meteorologia (INMET) </a>. Outra parte dos dados utilizados na máquina Fuzzy foram obtidos do <a href="http://servicos.cptec.inpe.br/XML/estacao/SBNT/condicoesAtuais.xml"> Centro de Previsão de Tempo e Estudos Climáticos, do Instituto Nacional de Pesquisas Espaciais (CPTEC/INPE) </a>.

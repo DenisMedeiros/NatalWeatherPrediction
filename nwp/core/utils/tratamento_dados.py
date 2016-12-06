@@ -24,7 +24,7 @@ def coletas_dict(nome_arquivo):
             temperatura_min = coleta[1]
             temperatura_max = coleta[2]
             temperatura_media = coleta[3]
-            humidade_media = coleta[4]
+            umidade_media = coleta[4]
             insolacao = coleta[5]
             velocidade_vento = coleta[6]
             precipitacao = coleta[7]
@@ -35,7 +35,7 @@ def coletas_dict(nome_arquivo):
                 temperatura_min = float(temperatura_min)
                 temperatura_max = float(temperatura_max)
                 temperatura_media = float(temperatura_media)
-                humidade_media = float(humidade_media)
+                umidade_media = float(umidade_media)
                 insolacao = float(insolacao)
                 velocidade_vento = float(velocidade_vento)
                 precipitacao = float(precipitacao)
@@ -44,7 +44,7 @@ def coletas_dict(nome_arquivo):
                     'temperatura_min': temperatura_min,
                     'temperatura_max': temperatura_max,
                     'temperatura_media': temperatura_media,
-                    'humidade_media': humidade_media,
+                    'umidade_media': umidade_media,
                     'insolacao': insolacao,
                     'velocidade_vento': velocidade_vento,
                     'precipitacao': precipitacao,
@@ -72,7 +72,7 @@ def tratar_dados():
     writer = csv.writer(arquivo_escrita, delimiter=';')
 
     writer.writerow(['data', 'temperatura_min', 'temperatura_max',
-        'temperatura_media', 'humidade_media', 'insolacao',
+        'temperatura_media', 'umidade_media', 'insolacao',
         'velocidade_vento', 'precipitacao'])
 
     try:
@@ -110,9 +110,9 @@ def tratar_dados():
                 temperatura_media = coleta_12[7]
 
             if coleta_00[8]:
-                humidade_media = coleta_00[8]
+                umidade_media = coleta_00[8]
             else:
-                humidade_media = coleta_12[8]
+                umidade_media = coleta_12[8]
 
             if coleta_00[9]:
                 velocidade_vento = coleta_00[9]
@@ -120,7 +120,7 @@ def tratar_dados():
                 velocidade_vento = coleta_12[9]
 
             writer.writerow([data, temperatura_min, temperatura_max,
-            temperatura_media, humidade_media, insolacao, velocidade_vento,
+            temperatura_media, umidade_media, insolacao, velocidade_vento,
             precipitacao])
 
     except StopIteration:
@@ -140,7 +140,7 @@ def corrigir_dados_tratados():
     writer = csv.writer(arquivo_escrita, delimiter=';')
     # Escreve os cabeçalhos.
     writer.writerow(['data', 'temperatura_min', 'temperatura_max',
-        'temperatura_media', 'humidade_media', 'insolacao',
+        'temperatura_media', 'umidade_media', 'insolacao',
         'velocidade_vento', 'precipitacao'])
 
     # Lê o arquivo com os dados e armazena os não defeituosos em um dicionário.
@@ -160,7 +160,7 @@ def corrigir_dados_tratados():
             temperatura_min = coleta[1]
             temperatura_max = coleta[2]
             temperatura_media = coleta[3]
-            humidade_media = coleta[4]
+            umidade_media = coleta[4]
             insolacao = coleta[5]
             velocidade_vento = coleta[6]
             precipitacao = coleta[7]
@@ -192,12 +192,12 @@ def corrigir_dados_tratados():
                         temperatura_media = coletas_corretas.get(anterior)['temperatura_media']
                         break
 
-            if not humidade_media:
+            if not umidade_media:
                 anterior = data
                 while True:
                     anterior -= datetime.timedelta(days=1)
                     if coletas_corretas.get(anterior):
-                        humidade_media = coletas_corretas.get(anterior)['humidade_media']
+                        umidade_media = coletas_corretas.get(anterior)['umidade_media']
                         break
 
             if not insolacao:
@@ -228,13 +228,13 @@ def corrigir_dados_tratados():
                 temperatura_min = float(temperatura_min)
                 temperatura_max = float(temperatura_max)
                 temperatura_media = float(temperatura_media)
-                humidade_media = float(humidade_media)
+                umidade_media = float(umidade_media)
                 insolacao = float(insolacao)
                 velocidade_vento = float(velocidade_vento)
                 precipitacao = float(precipitacao)
 
                 writer.writerow([data.strftime('%d/%m/%Y'), temperatura_min, temperatura_max,
-                    temperatura_media, humidade_media, insolacao,
+                    temperatura_media, umidade_media, insolacao,
                     velocidade_vento, precipitacao])
 
             except Exception, e:
@@ -258,20 +258,20 @@ def criar_conjunto_treinamento_validacao():
     # Escreve os cabeçalhos.
     writer_ct.writerow([
         'mes', 'temperatura_min1', 'temperatura_min2',
-        'temperatura_max1', 'temperatura_max2', 'humidade_media1',
-        'humidade_media2', 'insolacao1', 'insolacao2', 'velocidade_vento1',
+        'temperatura_max1', 'temperatura_max2', 'umidade_media1',
+        'umidade_media2', 'insolacao1', 'insolacao2', 'velocidade_vento1',
         'velocidade_vento2', 'precipitacao', 'temperatura_min',
-        'temperatura_max', 'humidade_media',
+        'temperatura_max', 'umidade_media',
     ])
 
     writer_cv = csv.writer(arquivo_cv, delimiter=';')
     # Escreve os cabeçalhos.
     writer_cv.writerow([
         'mes', 'temperatura_min1', 'temperatura_min2',
-        'temperatura_max1', 'temperatura_max2', 'humidade_media1',
-        'humidade_media2', 'insolacao1', 'insolacao2', 'velocidade_vento1',
+        'temperatura_max1', 'temperatura_max2', 'umidade_media1',
+        'umidade_media2', 'insolacao1', 'insolacao2', 'velocidade_vento1',
         'velocidade_vento2', 'precipitacao', 'temperatura_min',
-        'temperatura_max', 'humidade_media',
+        'temperatura_max', 'umidade_media',
     ])
 
     # Lê o arquivo com os dados e armazena os não defeituosos em um dicionário.
@@ -295,8 +295,8 @@ def criar_conjunto_treinamento_validacao():
         temperatura_min2 = coleta2['temperatura_min']
         temperatura_max1 = coleta1['temperatura_max']
         temperatura_max2 = coleta2['temperatura_max']
-        humidade_media1 = coleta1['humidade_media']
-        humidade_media2 = coleta2['humidade_media']
+        umidade_media1 = coleta1['umidade_media']
+        umidade_media2 = coleta2['umidade_media']
         insolacao1 = coleta1['insolacao']
         insolacao2 = coleta2['insolacao']
         velocidade_vento1 = coleta1['velocidade_vento']
@@ -305,14 +305,14 @@ def criar_conjunto_treinamento_validacao():
         precipitacao = coleta0['precipitacao']
         temperatura_min = coleta0['temperatura_min']
         temperatura_max = coleta0['temperatura_max']
-        humidade_media = coleta0['humidade_media']
+        umidade_media = coleta0['umidade_media']
 
         writer_ct.writerow([
         mes, temperatura_min1, temperatura_min2,
-        temperatura_max1, temperatura_max2, humidade_media1,
-        humidade_media2, insolacao1, insolacao2, velocidade_vento1,
+        temperatura_max1, temperatura_max2, umidade_media1,
+        umidade_media2, insolacao1, insolacao2, velocidade_vento1,
         velocidade_vento2, precipitacao, temperatura_min,
-        temperatura_max, humidade_media,
+        temperatura_max, umidade_media,
         ])
 
     for i in indices_validacao:
@@ -327,8 +327,8 @@ def criar_conjunto_treinamento_validacao():
         temperatura_min2 = coleta2['temperatura_min']
         temperatura_max1 = coleta1['temperatura_max']
         temperatura_max2 = coleta2['temperatura_max']
-        humidade_media1 = coleta1['humidade_media']
-        humidade_media2 = coleta2['humidade_media']
+        umidade_media1 = coleta1['umidade_media']
+        umidade_media2 = coleta2['umidade_media']
         insolacao1 = coleta1['insolacao']
         insolacao2 = coleta2['insolacao']
         velocidade_vento1 = coleta1['velocidade_vento']
@@ -337,14 +337,14 @@ def criar_conjunto_treinamento_validacao():
         precipitacao = coleta0['precipitacao']
         temperatura_min = coleta0['temperatura_min']
         temperatura_max = coleta0['temperatura_max']
-        humidade_media = coleta0['humidade_media']
+        umidade_media = coleta0['umidade_media']
 
         writer_cv.writerow([
         mes, temperatura_min1, temperatura_min2,
-        temperatura_max1, temperatura_max2, humidade_media1,
-        humidade_media2, insolacao1, insolacao2, velocidade_vento1,
+        temperatura_max1, temperatura_max2, umidade_media1,
+        umidade_media2, insolacao1, insolacao2, velocidade_vento1,
         velocidade_vento2, precipitacao, temperatura_min,
-        temperatura_max, humidade_media,
+        temperatura_max, umidade_media,
         ])
 
     arquivo_ct.close()

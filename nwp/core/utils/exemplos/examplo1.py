@@ -11,13 +11,13 @@ A entrada da RNA será no formato a seguir:
 
     temp_min_1,
     temp_max_1,
-    humidade_media_1,
+    umidade_media_1,
     insolacao_1,
     velocidade_vento_1,
 
     temp_min_2,
     temp_max_2,
-    humidade_media_2,
+    umidade_media_2,
     insolacao_2,
     velocidade_vento_2,
 
@@ -36,7 +36,7 @@ A saída da RNA será no formato a seguir:
     precipitacao,
     temp_min,
     temp_max,
-    humidade,
+    umidade,
 ]
 '''
 desired_output = numpy.array([

@@ -90,9 +90,9 @@ def get():
     anteontem3 = linhas[2].xpath('./td/span')
     anteontem_data = datetime.datetime.strptime(anteontem1[0].xpath('./text()')[0], '%d/%m/%Y')
     try:
-        anteontem_humidade_media = float(anteontem1[3].xpath('./text()')[0])
+        anteontem_umidade_media = float(anteontem1[3].xpath('./text()')[0])
     except:
-        anteontem_humidade_media = 'erro'
+        anteontem_umidade_media = 'erro'
     try:
         anteontem_velocidade_vento = float(anteontem1[5].xpath('./text()')[0])
     except:
@@ -122,7 +122,7 @@ def get():
         'temperatura_min': anteontem_temperatura_min,
         'temperatura_max': anteontem_temperatura_max,
         'temperatura_media': anteontem_temperatura_media,
-        'humidade_media': anteontem_humidade_media,
+        'umidade_media': anteontem_umidade_media,
         'insolacao': anteontem_insolacao,
         'velocidade_vento': anteontem_velocidade_vento,
         'precipitacao': anteontem_precipitacao,
@@ -134,9 +134,9 @@ def get():
     ontem3 = linhas[5].xpath('./td/span')
     ontem_data = datetime.datetime.strptime(ontem1[0].xpath('./text()')[0], '%d/%m/%Y')
     try:
-        ontem_humidade_media = float(ontem1[3].xpath('./text()')[0])
+        ontem_umidade_media = float(ontem1[3].xpath('./text()')[0])
     except:
-        ontem_humidade_media = 'erro'
+        ontem_umidade_media = 'erro'
     try:
         ontem_velocidade_vento = float(ontem1[5].xpath('./text()')[0])
     except:
@@ -166,7 +166,7 @@ def get():
         'temperatura_min': ontem_temperatura_min,
         'temperatura_max': ontem_temperatura_max,
         'temperatura_media': ontem_temperatura_media,
-        'humidade_media': ontem_humidade_media,
+        'umidade_media': ontem_umidade_media,
         'insolacao': ontem_insolacao,
         'velocidade_vento': ontem_velocidade_vento,
         'precipitacao': ontem_precipitacao,
