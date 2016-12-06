@@ -4,7 +4,7 @@ import os, csv, datetime, random, numpy
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
-from .utils import tratamento_dados, dados_atuais, validacao
+from .utils import tratamento_dados, dados_atuais, validacao, clima, fuzzy
 from .models import Coleta
 import datetime
 
@@ -46,6 +46,15 @@ class PaginaInicialView(View):
         context = {
             'hoje': hoje,
         }
+
+        tempo_hoje = clima.get_tempo_hoje()
+
+        confiabilidades = fuzzy.calcular_confiabilidade(
+            previsao_hoje['precipitacao'], tempo_hoje['precipitacao'],
+            temp_min_rna, temp_min_real,
+            temp_max_rna, temp_max_real,
+            um_media_rna, um_media_real,
+        )
 
         context.update(previsao_hoje)
         return render(request, 'pagina_inicial.html', context)
