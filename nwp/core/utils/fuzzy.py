@@ -1,224 +1,283 @@
-"""
-==================================
-The Tipping Problem - The Hard Way
-==================================
+# -*- coding: utf-8 -*-
 
- Note: This method computes everything by hand, step by step. For most people,
- the new API for fuzzy systems will be preferable. The same problem is solved
- with the new API `in this example <./plot_tipping_problem_newapi.html>`_.
-
-The 'tipping problem' is commonly used to illustrate the power of fuzzy logic
-principles to generate complex behavior from a compact, intuitive set of
-expert rules.
-
-Input variables
----------------
-
-A number of variables play into the decision about how much to tip while
-dining. Consider two of them:
-
-* ``quality`` : Quality of the food
-* ``service`` : Quality of the service
-
-Output variable
----------------
-
-The output variable is simply the tip amount, in percentage points:
-
-* ``tip`` : Percent of bill to add as tip
-
-
-For the purposes of discussion, let's say we need 'high', 'medium', and 'low'
-membership functions for both input variables and our output variable. These
-are defined in scikit-fuzzy as follows
-
-"""
 import numpy as np
 import skfuzzy as fuzz
-import matplotlib.pyplot as plt
+from skfuzzy import control as ctrl
 
-# Generate universe variables
-#   * Quality and service on subjective ranges [0, 10]
-#   * Tip has a range of [0, 25] in units of percentage points
-x_qual = np.arange(0, 11, 1)
-x_serv = np.arange(0, 11, 1)
-x_tip  = np.arange(0, 26, 1)
 
-# Generate fuzzy membership functions
-qual_lo = fuzz.trimf(x_qual, [0, 0, 5])
-qual_md = fuzz.trimf(x_qual, [0, 5, 10])
-qual_hi = fuzz.trimf(x_qual, [5, 10, 10])
-serv_lo = fuzz.trimf(x_serv, [0, 0, 5])
-serv_md = fuzz.trimf(x_serv, [0, 5, 10])
-serv_hi = fuzz.trimf(x_serv, [5, 10, 10])
-tip_lo = fuzz.trimf(x_tip, [0, 0, 13])
-tip_md = fuzz.trimf(x_tip, [0, 13, 25])
-tip_hi = fuzz.trimf(x_tip, [13, 25, 25])
+def calcular_confiabilidade(
+        prec_rna, prec_real,
+        temp_min_rna, temp_min_real,
+        temp_max_rna, temp_max_real,
+        um_media_rna, um_media_real,
+    ):
 
-# Visualize these universes and membership functions
-fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(8, 9))
+    ''' Funções de pertinência dos antecedentes (entradas). '''
 
-ax0.plot(x_qual, qual_lo, 'b', linewidth=1.5, label='Bad')
-ax0.plot(x_qual, qual_md, 'g', linewidth=1.5, label='Decent')
-ax0.plot(x_qual, qual_hi, 'r', linewidth=1.5, label='Great')
-ax0.set_title('Food quality')
-ax0.legend()
+    precipitacao_rna = ctrl.Antecedent(np.arange(0, 301, 1), 'precipitacao_rna')
+    precipitacao_real = ctrl.Antecedent(np.arange(0, 301, 1), 'precipitacao_real')
 
-ax1.plot(x_serv, serv_lo, 'b', linewidth=1.5, label='Poor')
-ax1.plot(x_serv, serv_md, 'g', linewidth=1.5, label='Acceptable')
-ax1.plot(x_serv, serv_hi, 'r', linewidth=1.5, label='Amazing')
-ax1.set_title('Service quality')
-ax1.legend()
+    precipitacao_rna['baixo'] = fuzz.trimf(precipitacao_rna.universe, [0, 15, 30])
+    precipitacao_rna['medio'] = fuzz.trimf(precipitacao_rna.universe, [20, 40, 60])
+    precipitacao_rna['alto'] = fuzz.trimf(precipitacao_rna.universe, [50, 175, 300])
 
-ax2.plot(x_tip, tip_lo, 'b', linewidth=1.5, label='Low')
-ax2.plot(x_tip, tip_md, 'g', linewidth=1.5, label='Medium')
-ax2.plot(x_tip, tip_hi, 'r', linewidth=1.5, label='High')
-ax2.set_title('Tip amount')
-ax2.legend()
+    precipitacao_real['baixo'] = fuzz.trimf(precipitacao_real.universe, [0, 15, 30])
+    precipitacao_real['medio'] = fuzz.trimf(precipitacao_real.universe, [20, 40, 60])
+    precipitacao_real['alto'] = fuzz.trimf(precipitacao_real.universe, [50, 175, 300])
 
-# Turn off top/right axes
-for ax in (ax0, ax1, ax2):
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
+    #precipitacao_rna['baixo'].view()
 
-plt.tight_layout()
+    temperatura_min_rna = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_min_rna')
+    temperatura_min_real = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_min_real')
 
-"""
-.. image:: PLOT2RST.current_figure
+    temperatura_min_rna['baixo'] = fuzz.trimf(temperatura_min_rna.universe, [0, 10, 20])
+    temperatura_min_rna['medio'] = fuzz.trimf(temperatura_min_rna.universe, [15, 23, 30])
+    temperatura_min_rna['alto'] = fuzz.trimf(temperatura_min_rna.universe, [25, 33, 40])
 
-Fuzzy rules
------------
+    temperatura_min_real['baixo'] = fuzz.trimf(temperatura_min_real.universe, [0, 10, 20])
+    temperatura_min_real['medio'] = fuzz.trimf(temperatura_min_real.universe, [15, 23, 30])
+    temperatura_min_real['alto'] = fuzz.trimf(temperatura_min_real.universe, [25, 33, 40])
 
-Now, to make these triangles useful, we define the *fuzzy relationship*
-between input and output variables. For the purposes of our example, consider
-three simple rules:
+    #temperatura_min_rna['baixo'].view()
 
-1. If the food is bad OR the service is poor, then the tip will be low
-2. If the service is acceptable, then the tip will be medium
-3. If the food is great OR the service is amazing, then the tip will be high.
+    temperatura_max_rna = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_max_rna')
+    temperatura_max_real = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_max_real')
 
-Most people would agree on these rules, but the rules are fuzzy. Mapping the
-imprecise rules into a defined, actionable tip is a challenge. This is the
-kind of task at which fuzzy logic excels.
+    temperatura_max_rna['baixo'] = fuzz.trimf(temperatura_max_rna.universe, [0, 10, 20])
+    temperatura_max_rna['medio'] = fuzz.trimf(temperatura_max_rna.universe, [15, 23, 30])
+    temperatura_max_rna['alto'] = fuzz.trimf(temperatura_max_rna.universe, [25, 33, 40])
 
-Rule application
-----------------
+    temperatura_max_real['baixo'] = fuzz.trimf(temperatura_max_real.universe, [0, 10, 20])
+    temperatura_max_real['medio'] = fuzz.trimf(temperatura_max_real.universe, [15, 23, 30])
+    temperatura_max_real['alto'] = fuzz.trimf(temperatura_max_real.universe, [25, 33, 40])
 
-What would the tip be in the following circumstance:
+    #temperatura_max_rna['baixo'].view()
 
-* Food *quality* was **6.5**
-* *Service* was **9.8**
+    umidade_media_rna = ctrl.Antecedent(np.arange(0, 101, 1), 'umidade_media_rna')
+    umidade_media_real = ctrl.Antecedent(np.arange(0, 101, 1), 'umidade_media_real') 
 
-"""
+    umidade_media_rna['baixo'] = fuzz.trimf(umidade_media_rna.universe, [0, 25, 50])
+    umidade_media_rna['medio'] = fuzz.trimf(umidade_media_rna.universe, [30, 50, 70])
+    umidade_media_rna['alto'] = fuzz.trimf(umidade_media_rna.universe, [50, 75, 100])
 
-# We need the activation of our fuzzy membership functions at these values.
-# The exact values 6.5 and 9.8 do not exist on our universes...
-# This is what fuzz.interp_membership exists for!
-qual_level_lo = fuzz.interp_membership(x_qual, qual_lo, 6.5)
-qual_level_md = fuzz.interp_membership(x_qual, qual_md, 6.5)
-qual_level_hi = fuzz.interp_membership(x_qual, qual_hi, 6.5)
+    umidade_media_real['baixo'] = fuzz.trimf(umidade_media_real.universe, [0, 25, 50])
+    umidade_media_real['medio'] = fuzz.trimf(umidade_media_real.universe, [30, 50, 70])
+    umidade_media_real['alto'] = fuzz.trimf(umidade_media_real.universe, [50, 75, 100])
 
-serv_level_lo = fuzz.interp_membership(x_serv, serv_lo, 9.8)
-serv_level_md = fuzz.interp_membership(x_serv, serv_md, 9.8)
-serv_level_hi = fuzz.interp_membership(x_serv, serv_hi, 9.8)
+    #umidade_media_rna['baixo'].view()
+    ''' Funções de pertinência dos consequentes (saídas). '''
+    conf_precipitacao = ctrl.Consequent(np.arange(0, 101, 1), 'conf_precipitacao')
 
-# Now we take our rules and apply them. Rule 1 concerns bad food OR service.
-# The OR operator means we take the maximum of these two.
-active_rule1 = np.fmax(qual_level_lo, serv_level_lo)
+    conf_precipitacao['baixo'] = fuzz.trimf(conf_precipitacao.universe, [0, 20, 40])
+    conf_precipitacao['medio'] = fuzz.trimf(conf_precipitacao.universe, [30, 50, 70])
+    conf_precipitacao['alto'] = fuzz.trimf(conf_precipitacao.universe, [60, 80, 100])
 
-# Now we apply this by clipping the top off the corresponding output
-# membership function with `np.fmin`
-tip_activation_lo = np.fmin(active_rule1, tip_lo)  # removed entirely to 0
+    conf_temp_min = ctrl.Consequent(np.arange(0, 101, 1), 'conf_temp_min')
 
-# For rule 2 we connect acceptable service to medium tipping
-tip_activation_md = np.fmin(serv_level_md, tip_md)
+    conf_temp_min['baixo'] = fuzz.trimf(conf_temp_min.universe, [0, 20, 40])
+    conf_temp_min['medio'] = fuzz.trimf(conf_temp_min.universe, [30, 50, 70])
+    conf_temp_min['alto'] = fuzz.trimf(conf_temp_min.universe, [60, 80, 100])
 
-# For rule 3 we connect high service OR high food with high tipping
-active_rule3 = np.fmax(qual_level_hi, serv_level_hi)
-tip_activation_hi = np.fmin(active_rule3, tip_hi)
-tip0 = np.zeros_like(x_tip)
+    conf_temp_max = ctrl.Consequent(np.arange(0, 101, 1), 'conf_temp_max')
 
-# Visualize this
-fig, ax0 = plt.subplots(figsize=(8, 3))
+    conf_temp_max['baixo'] = fuzz.trimf(conf_temp_max.universe, [0, 20, 40])
+    conf_temp_max['medio'] = fuzz.trimf(conf_temp_max.universe, [30, 50, 70])
+    conf_temp_max['alto'] = fuzz.trimf(conf_temp_max.universe, [60, 80, 100])
 
-ax0.fill_between(x_tip, tip0, tip_activation_lo, facecolor='b', alpha=0.7)
-ax0.plot(x_tip, tip_lo, 'b', linewidth=0.5, linestyle='--', )
-ax0.fill_between(x_tip, tip0, tip_activation_md, facecolor='g', alpha=0.7)
-ax0.plot(x_tip, tip_md, 'g', linewidth=0.5, linestyle='--')
-ax0.fill_between(x_tip, tip0, tip_activation_hi, facecolor='r', alpha=0.7)
-ax0.plot(x_tip, tip_hi, 'r', linewidth=0.5, linestyle='--')
-ax0.set_title('Output membership activity')
+    conf_umidade_media= ctrl.Consequent(np.arange(0, 101, 1), 'conf_umidade_media')
 
-# Turn off top/right axes
-for ax in (ax0,):
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
+    conf_umidade_media['baixo'] = fuzz.trimf(conf_umidade_media.universe, [0, 20, 40])
+    conf_umidade_media['medio'] = fuzz.trimf(conf_umidade_media.universe, [30, 50, 70])
+    conf_umidade_media['alto'] = fuzz.trimf(conf_umidade_media.universe, [60, 80, 100])
 
-plt.tight_layout()
+    ''' Regras '''
+    regras_precipitacao = [
+        ctrl.Rule(
+            precipitacao_rna['baixo'] & precipitacao_real['baixo'], 
+            conf_precipitacao['alto'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['medio'] & precipitacao_real['medio'], 
+            conf_precipitacao['alto'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['alto'] & precipitacao_real['alto'], 
+            conf_precipitacao['alto'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['baixo'] & precipitacao_real['medio'], 
+            conf_precipitacao['medio'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['medio'] & precipitacao_real['baixo'], 
+            conf_precipitacao['medio'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['medio'] & precipitacao_real['alto'], 
+            conf_precipitacao['medio'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['alto'] & precipitacao_real['medio'], 
+            conf_precipitacao['medio'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['baixo'] & precipitacao_real['alto'], 
+            conf_precipitacao['baixo'],
+        ),
+        ctrl.Rule(
+            precipitacao_rna['alto'] & precipitacao_real['baixo'], 
+            conf_precipitacao['baixo'],
+        ),
+    ]
 
-"""
-.. image:: PLOT2RST.current_figure
+    regras_temperatura_min = [
+        ctrl.Rule(
+            temperatura_min_rna['baixo'] & temperatura_min_real['baixo'], 
+            conf_temp_min['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['medio'] & temperatura_min_real['medio'], 
+            conf_temp_min['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['alto'] & temperatura_min_real['alto'], 
+            conf_temp_min['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['baixo'] & temperatura_min_real['medio'], 
+            conf_temp_min['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['medio'] & temperatura_min_real['baixo'], 
+            conf_temp_min['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['medio'] & temperatura_min_real['alto'], 
+            conf_temp_min['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['alto'] & temperatura_min_real['medio'], 
+            conf_temp_min['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['baixo'] & temperatura_min_real['alto'], 
+            conf_temp_min['baixo'],
+        ),
+        ctrl.Rule(
+            temperatura_min_rna['alto'] & temperatura_min_real['baixo'], 
+            conf_temp_min['baixo'],
+        ),
+    ]
 
-Rule aggregation
-----------------
+    regras_temperatura_max = [
+        ctrl.Rule(
+            temperatura_max_rna['baixo'] & temperatura_max_real['baixo'], 
+            conf_temp_max['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['medio'] & temperatura_max_real['medio'], 
+            conf_temp_max['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['alto'] & temperatura_max_real['alto'], 
+            conf_temp_max['alto'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['baixo'] & temperatura_max_real['medio'], 
+            conf_temp_max['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['medio'] & temperatura_max_real['baixo'], 
+            conf_temp_max['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['medio'] & temperatura_max_real['alto'], 
+            conf_temp_max['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['alto'] & temperatura_max_real['medio'], 
+            conf_temp_max['medio'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['baixo'] & temperatura_max_real['alto'], 
+            conf_temp_max['baixo'],
+        ),
+        ctrl.Rule(
+            temperatura_max_rna['alto'] & temperatura_max_real['baixo'], 
+            conf_temp_max['baixo'],
+        ),
+    ]
 
-With the *activity* of each output membership function known, all output
-membership functions must be combined. This is typically done using a
-maximum operator. This step is also known as *aggregation*.
+    regras_umidade_media = [
+        ctrl.Rule(
+            umidade_media_rna['baixo'] & umidade_media_real['baixo'], 
+            conf_umidade_media['alto'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['medio'] & umidade_media_real['medio'], 
+            conf_umidade_media['alto'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['alto'] & umidade_media_real['alto'], 
+            conf_umidade_media['alto'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['baixo'] & umidade_media_real['medio'], 
+            conf_umidade_media['medio'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['medio'] & umidade_media_real['baixo'], 
+            conf_umidade_media['medio'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['medio'] & umidade_media_real['alto'], 
+            conf_umidade_media['medio'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['alto'] & umidade_media_real['medio'], 
+            conf_umidade_media['medio'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['baixo'] & umidade_media_real['alto'], 
+            conf_umidade_media['baixo'],
+        ),
+        ctrl.Rule(
+            umidade_media_rna['alto'] & umidade_media_real['baixo'], 
+            conf_umidade_media['baixo'],
+        ),
+    ]
 
-Defuzzification
----------------
-Finally, to get a real world answer, we return to *crisp* logic from the
-world of fuzzy membership functions. For the purposes of this example
-the centroid method will be used.
+    ''' Execução da máquina de inferência '''
+    confiabilidade_ctrl = ctrl.ControlSystem(
+        regras_precipitacao + 
+        regras_temperatura_min + 
+        regras_temperatura_max + 
+        regras_umidade_media
+    )
+    confiabilidade = ctrl.ControlSystemSimulation(confiabilidade_ctrl)
 
-The result is a tip of **20.2%**.
----------------------------------
-"""
+    confiabilidade.input['precipitacao_rna'] = prec_rna
+    confiabilidade.input['precipitacao_real'] = prec_real
+    confiabilidade.input['temperatura_min_rna'] = temp_min_rna
+    confiabilidade.input['temperatura_min_real'] = temp_min_real
+    confiabilidade.input['temperatura_max_rna'] = temp_max_rna
+    confiabilidade.input['temperatura_max_real'] = temp_max_real
+    confiabilidade.input['umidade_media_rna'] = um_media_rna
+    confiabilidade.input['umidade_media_real'] = um_media_real
 
-# Aggregate all three output membership functions together
-aggregated = np.fmax(tip_activation_lo,
-                     np.fmax(tip_activation_md, tip_activation_hi))
+    # Calcula
+    confiabilidade.compute()
 
-# Calculate defuzzified result
-tip = fuzz.defuzz(x_tip, aggregated, 'centroid')
-tip_activation = fuzz.interp_membership(x_tip, aggregated, tip)  # for plot
+    #print confiabilidade.input
+    #print confiabilidade.output
+    #conf_precipitacao.view(sim=confiabilidade)
 
-# Visualize this
-fig, ax0 = plt.subplots(figsize=(8, 3))
+    return confiabilidade.output
 
-ax0.plot(x_tip, tip_lo, 'b', linewidth=0.5, linestyle='--', )
-ax0.plot(x_tip, tip_md, 'g', linewidth=0.5, linestyle='--')
-ax0.plot(x_tip, tip_hi, 'r', linewidth=0.5, linestyle='--')
-ax0.fill_between(x_tip, tip0, aggregated, facecolor='Orange', alpha=0.7)
-ax0.plot([tip, tip], [0, tip_activation], 'k', linewidth=1.5, alpha=0.9)
-ax0.set_title('Aggregated membership and result (line)')
 
-# Turn off top/right axes
-for ax in (ax0,):
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
-
-plt.tight_layout()
-fig.show()
-
-"""
-.. image:: PLOT2RST.current_figure
-
-Final thoughts
---------------
-
-The power of fuzzy systems is allowing complicated, intuitive behavior based
-on a sparse system of rules with minimal overhead. Note our membership
-function universes were coarse, only defined at the integers, but
-``fuzz.interp_membership`` allowed the effective resolution to increase on
-demand. This system can respond to arbitrarily small changes in inputs,
-and the processing burden is minimal.
-
-"""
+print calcular_confiabilidade(
+        prec_rna=1, prec_real=5,
+        temp_min_rna=22, temp_min_real=25,
+        temp_max_rna=32, temp_max_real=33,
+        um_media_rna=60, um_media_real=70,
+)
