@@ -31,24 +31,25 @@ def calcular_confiabilidade(
     temperatura_min_real = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_min_real')
 
     temperatura_min_rna['baixo'] = fuzz.trimf(temperatura_min_rna.universe, [0, 10, 20])
-    temperatura_min_rna['medio'] = fuzz.trimf(temperatura_min_rna.universe, [15, 23, 30])
+    temperatura_min_rna['medio'] = fuzz.trimf(temperatura_min_rna.universe, [10, 23, 35])
     temperatura_min_rna['alto'] = fuzz.trimf(temperatura_min_rna.universe, [25, 33, 40])
 
     temperatura_min_real['baixo'] = fuzz.trimf(temperatura_min_real.universe, [0, 10, 20])
-    temperatura_min_real['medio'] = fuzz.trimf(temperatura_min_real.universe, [15, 23, 30])
+    temperatura_min_real['medio'] = fuzz.trimf(temperatura_min_real.universe, [10, 23, 35])
     temperatura_min_real['alto'] = fuzz.trimf(temperatura_min_real.universe, [25, 33, 40])
 
     #temperatura_min_rna['baixo'].view()
+   
 
     temperatura_max_rna = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_max_rna')
     temperatura_max_real = ctrl.Antecedent(np.arange(0, 41, 1), 'temperatura_max_real')
 
     temperatura_max_rna['baixo'] = fuzz.trimf(temperatura_max_rna.universe, [0, 10, 20])
-    temperatura_max_rna['medio'] = fuzz.trimf(temperatura_max_rna.universe, [15, 23, 30])
+    temperatura_max_rna['medio'] = fuzz.trimf(temperatura_max_rna.universe, [10, 23, 35])
     temperatura_max_rna['alto'] = fuzz.trimf(temperatura_max_rna.universe, [25, 33, 40])
 
     temperatura_max_real['baixo'] = fuzz.trimf(temperatura_max_real.universe, [0, 10, 20])
-    temperatura_max_real['medio'] = fuzz.trimf(temperatura_max_real.universe, [15, 23, 30])
+    temperatura_max_real['medio'] = fuzz.trimf(temperatura_max_real.universe, [10, 23, 35])
     temperatura_max_real['alto'] = fuzz.trimf(temperatura_max_real.universe, [25, 33, 40])
 
     #temperatura_max_rna['baixo'].view()
@@ -57,37 +58,39 @@ def calcular_confiabilidade(
     umidade_media_real = ctrl.Antecedent(np.arange(0, 101, 1), 'umidade_media_real') 
 
     umidade_media_rna['baixo'] = fuzz.trimf(umidade_media_rna.universe, [0, 25, 50])
-    umidade_media_rna['medio'] = fuzz.trimf(umidade_media_rna.universe, [30, 50, 70])
+    umidade_media_rna['medio'] = fuzz.trimf(umidade_media_rna.universe, [20, 50, 80])
     umidade_media_rna['alto'] = fuzz.trimf(umidade_media_rna.universe, [50, 75, 100])
 
     umidade_media_real['baixo'] = fuzz.trimf(umidade_media_real.universe, [0, 25, 50])
-    umidade_media_real['medio'] = fuzz.trimf(umidade_media_real.universe, [30, 50, 70])
+    umidade_media_real['medio'] = fuzz.trimf(umidade_media_real.universe, [20, 50, 80])
     umidade_media_real['alto'] = fuzz.trimf(umidade_media_real.universe, [50, 75, 100])
 
     #umidade_media_rna['baixo'].view()
+    #input()
+
     ''' Funções de pertinência dos consequentes (saídas). '''
     conf_precipitacao = ctrl.Consequent(np.arange(0, 101, 1), 'conf_precipitacao')
 
     conf_precipitacao['baixo'] = fuzz.trimf(conf_precipitacao.universe, [0, 20, 40])
-    conf_precipitacao['medio'] = fuzz.trimf(conf_precipitacao.universe, [30, 50, 70])
+    conf_precipitacao['medio'] = fuzz.trimf(conf_precipitacao.universe, [20, 50, 80])
     conf_precipitacao['alto'] = fuzz.trimf(conf_precipitacao.universe, [60, 80, 100])
 
     conf_temp_min = ctrl.Consequent(np.arange(0, 101, 1), 'conf_temp_min')
 
     conf_temp_min['baixo'] = fuzz.trimf(conf_temp_min.universe, [0, 20, 40])
-    conf_temp_min['medio'] = fuzz.trimf(conf_temp_min.universe, [30, 50, 70])
+    conf_temp_min['medio'] = fuzz.trimf(conf_temp_min.universe, [20, 50, 80])
     conf_temp_min['alto'] = fuzz.trimf(conf_temp_min.universe, [60, 80, 100])
 
     conf_temp_max = ctrl.Consequent(np.arange(0, 101, 1), 'conf_temp_max')
 
     conf_temp_max['baixo'] = fuzz.trimf(conf_temp_max.universe, [0, 20, 40])
-    conf_temp_max['medio'] = fuzz.trimf(conf_temp_max.universe, [30, 50, 70])
+    conf_temp_max['medio'] = fuzz.trimf(conf_temp_max.universe, [20, 50, 80])
     conf_temp_max['alto'] = fuzz.trimf(conf_temp_max.universe, [60, 80, 100])
 
     conf_umidade_media= ctrl.Consequent(np.arange(0, 101, 1), 'conf_umidade_media')
 
     conf_umidade_media['baixo'] = fuzz.trimf(conf_umidade_media.universe, [0, 20, 40])
-    conf_umidade_media['medio'] = fuzz.trimf(conf_umidade_media.universe, [30, 50, 70])
+    conf_umidade_media['medio'] = fuzz.trimf(conf_umidade_media.universe, [20, 50, 80])
     conf_umidade_media['alto'] = fuzz.trimf(conf_umidade_media.universe, [60, 80, 100])
 
     ''' Regras '''
@@ -278,6 +281,6 @@ def calcular_confiabilidade(
 print calcular_confiabilidade(
         prec_rna=1, prec_real=5,
         temp_min_rna=22, temp_min_real=25,
-        temp_max_rna=32, temp_max_real=33,
-        um_media_rna=60, um_media_real=70,
+        temp_max_rna=31, temp_max_real=33,
+        um_media_rna=60, um_media_real=65,
 )
