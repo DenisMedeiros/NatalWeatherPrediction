@@ -64,7 +64,7 @@ class PaginaInicialView(View):
        
         context.update(previsao_hoje)
         context.update(confiabilidades)
-        
+
         return render(request, 'pagina_inicial.html', context)
 
 class SobreView(View):

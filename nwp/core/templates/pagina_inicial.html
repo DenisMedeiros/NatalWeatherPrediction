@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block body %}
 
@@ -15,22 +16,22 @@
         </thead>
         <tbody>
             <tr class="success">
-                <td align="center"> Precipitação </td> 
+                <td align="center"> <img src="{% static "core/img/precipitacao.png" %}" height="16px" /> Precipitação </td> 
                 <td align="center"> {{ precipitacao }} mm </td> 
                 <td align="center"> {{ conf_precipitacao }} % </td>
             </tr>
             <tr class="success">
-                <td align="center"> Temperatura Mínima </td> 
+                <td align="center"> <img src="{% static "core/img/temperatura.png" %}" height="16px" /> Temperatura Mínima </td> 
                 <td align="center"> {{ temperatura_min }} °C </td> 
                 <td align="center"> {{ conf_temp_min }} % </td>
             </tr>
             <tr class="success">
-                <td align="center"> Temperatura Máxima </td> 
+                <td align="center"> <img src="{% static "core/img/temperatura.png" %}" height="16px" /> Temperatura Máxima </td> 
                 <td align="center"> {{ temperatura_max }} °C </td>
                 <td align="center"> {{ conf_temp_max }} % </td>
             </tr>
             <tr class="success">
-                <td align="center"> Umidade </td> 
+                <td align="center"> <img src="{% static "core/img/umidade.png" %}" height="16px" /> Umidade </td> 
                 <td align="center"> {{ umidade_media }} % </td>
                 <td align="center"> {{ conf_umidade_media }} % </td>
             </tr>
