@@ -62,6 +62,21 @@ class PaginaInicialView(View):
         confiabilidades['conf_temp_max'] = round(confiabilidades['conf_temp_max'], 1)
         confiabilidades['conf_umidade_media'] = round(confiabilidades['conf_umidade_media'], 1)
        
+        tempo_hoje['temperatura_min'] = round(tempo_hoje['temperatura_min'], 1)
+        tempo_hoje['temperatura_max'] = round(tempo_hoje['temperatura_max'], 1)
+        tempo_hoje['umidade_media'] = round(tempo_hoje['umidade_media'], 1)
+        if tempo_hoje['precipitacao'] < 0:
+            tempo_hoje['precipitacao'] = 0
+        tempo_hoje['precipitacao'] = round(tempo_hoje['precipitacao'], 1)
+
+        context.update({
+            'precipitacao_real': tempo_hoje['precipitacao'],
+            'temperatura_min_real': tempo_hoje['temperatura_min'],
+            'temperatura_max_real': tempo_hoje['temperatura_max'],
+            'umidade_media_real': tempo_hoje['umidade_media'],
+        })
+
+
         context.update(previsao_hoje)
         context.update(confiabilidades)
 

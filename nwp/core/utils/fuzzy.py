@@ -275,7 +275,6 @@ def calcular_confiabilidade(
     #print confiabilidade.output
     #conf_precipitacao.view(sim=confiabilidade)
 
-    print confiabilidade.output
     return confiabilidade.output
 
 
