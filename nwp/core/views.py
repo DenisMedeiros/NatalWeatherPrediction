@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponse
 from .utils import tratamento_dados, dados_atuais, validacao, clima, fuzzy
-from .models import Coleta
+from .models import Coleta, Previsao
 import datetime
 
 # Create your views here.
@@ -47,35 +47,36 @@ class PaginaInicialView(View):
             previsao_hoje['precipitacao'] = 0
         previsao_hoje['precipitacao'] = round(previsao_hoje['precipitacao'], 1)
 
-
-        tempo_hoje = clima.get_tempo_hoje()
+        if Previsao.objects.filter(data=hoje):
+            tempo_hoje = Previsao.objects.get(data=hoje)
+        else:
+            tempo_wunderground = clima.get_tempo_hoje()
+            tempo_hoje = Previsao.objects.create(
+                data=hoje,
+                precipitacao= tempo_wunderground['precipitacao'],
+                temperatura_min= tempo_wunderground['temperatura_min'],
+                temperatura_max= tempo_wunderground['temperatura_max'],
+                umidade_media = tempo_wunderground['umidade_media'],
+            )
 
         confiabilidades = fuzzy.calcular_confiabilidade(
-            previsao_hoje['precipitacao'], tempo_hoje['precipitacao'],
-            previsao_hoje['temperatura_min'], tempo_hoje['temperatura_min'],
-            previsao_hoje['temperatura_max'], tempo_hoje['temperatura_max'],
-            previsao_hoje['umidade_media'], tempo_hoje['umidade_media'],
+            previsao_hoje['precipitacao'], tempo_hoje.precipitacao,
+            previsao_hoje['temperatura_min'], tempo_hoje.temperatura_min,
+            previsao_hoje['temperatura_max'], tempo_hoje.temperatura_max,
+            previsao_hoje['umidade_media'], tempo_hoje.umidade_media,
         )
 
         confiabilidades['conf_precipitacao'] = round(confiabilidades['conf_precipitacao'], 1)
         confiabilidades['conf_temp_min'] = round(confiabilidades['conf_temp_min'], 1)
         confiabilidades['conf_temp_max'] = round(confiabilidades['conf_temp_max'], 1)
         confiabilidades['conf_umidade_media'] = round(confiabilidades['conf_umidade_media'], 1)
-       
-        tempo_hoje['temperatura_min'] = round(tempo_hoje['temperatura_min'], 1)
-        tempo_hoje['temperatura_max'] = round(tempo_hoje['temperatura_max'], 1)
-        tempo_hoje['umidade_media'] = round(tempo_hoje['umidade_media'], 1)
-        if tempo_hoje['precipitacao'] < 0:
-            tempo_hoje['precipitacao'] = 0
-        tempo_hoje['precipitacao'] = round(tempo_hoje['precipitacao'], 1)
 
         context.update({
-            'precipitacao_real': tempo_hoje['precipitacao'],
-            'temperatura_min_real': tempo_hoje['temperatura_min'],
-            'temperatura_max_real': tempo_hoje['temperatura_max'],
-            'umidade_media_real': tempo_hoje['umidade_media'],
+            'precipitacao_real': tempo_hoje.precipitacao,
+            'temperatura_min_real': tempo_hoje.temperatura_min,
+            'temperatura_max_real': tempo_hoje.temperatura_max,
+            'umidade_media_real': tempo_hoje.umidade_media,
         })
-
 
         context.update(previsao_hoje)
         context.update(confiabilidades)

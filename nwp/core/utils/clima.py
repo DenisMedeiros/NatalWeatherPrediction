@@ -1,28 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import pyowm
+import json, requests
 
 def get_tempo_hoje():
-    owm = pyowm.OWM('10477b205f26c621bd1473b9660d791b')  # You MUST provide a valid API key
-    obs = owm.weather_at_id(3394023)
-    data = obs.get_reception_time(timeformat='date') 
-    w = obs.get_weather()
-    precipitacoes = w.get_rain()  
-    temperaturas = w.get_temperature(unit='celsius')  
-    umidade = w.get_humidity()    
+    
+    url = 'http://api.wunderground.com/api/e71117b0df2e3a51/forecast/q/SBNT.json'
 
-    if precipitacoes:
-        precipitacao = precipitacoes['3h']
-    else:
-        precipitacao = 0
+    resposta = requests.get(url=url)
+    dados = json.loads(resposta.text)
 
-    temperatura_min = temperaturas['temp_min']
-    temperatura_max = temperaturas['temp_max']
-    umidade_media = umidade
+    previsao_hoje = dados['forecast']['simpleforecast']['forecastday'][0]
 
     return {
-        'precipitacao': precipitacao,
-        'temperatura_min': temperatura_min,
-        'temperatura_max': temperatura_max,
-        'umidade_media': umidade_media,
+        'precipitacao': float(previsao_hoje['qpf_allday']['mm']),
+        'temperatura_min': float(previsao_hoje['low']['celsius']),
+        'temperatura_max': float(previsao_hoje['high']['celsius']),
+        'umidade_media': float(previsao_hoje['avehumidity']),
     }

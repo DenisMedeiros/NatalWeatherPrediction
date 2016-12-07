@@ -30,3 +30,22 @@ class Coleta(models.Model):
     class Meta:
         verbose_name = u'Coleta'
         verbose_name_plural = u'Coletas'
+
+class Previsao(models.Model):
+    data = models.DateField(unique=True,
+        verbose_name='Data da Coleta')
+    precipitacao = models.FloatField(blank=False, null=False,
+        verbose_name='Precipitação')
+    temperatura_min = models.FloatField(blank=False, null=False,
+        verbose_name='Temperatura Mínima')
+    temperatura_max = models.FloatField(blank=False, null=False,
+        verbose_name='Temperatura Máxima')
+    umidade_media = models.FloatField(blank=False, null=False,
+        verbose_name='umidade Média')
+
+    def __unicode__(self):
+        return 'Previsao #%d' %self.id
+
+    class Meta:
+        verbose_name = u'Previsão'
+        verbose_name_plural = u'Previsões'
